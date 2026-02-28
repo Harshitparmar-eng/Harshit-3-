@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart Crop Yield Predictor</title>
+<style>
+body{
+    font-family: Arial;
+    background:#f0f7f0;
+    text-align:center;
+}
+.container{
+    width:420px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px gray;
+}
+input,select{
+    width:95%;
+    padding:6px;
+    margin:6px 0;
+}
+button{
+    background:green;
+    color:white;
+    padding:10px;
+    border:none;
+    width:100%;
+    cursor:pointer;
+}
+button:hover{
+    background:darkgreen;
+}
+.result{
+    margin-top:15px;
+    text-align:left;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🌾 Smart Crop Yield Predictor</h2>
+
+<div class="container">
+
+<label>📍 Location (Kitho Che?):</label>
+<input type="text" id="location">
+
+<label>🌾 Crop Selection:</label>
+<select id="crop">
+<option value="2500">Wheat</option>
+<option value="3000">Rice</option>
+<option value="2000">Maize</option>
+<option value="3500">Sugarcane</option>
+</select>
+
+<label>Farm Area (hectares):</label>
+<input type="number" id="area">
+
+<label>Soil pH:</label>
+<input type="number" id="ph" step="0.1">
+
+<label>Soil Type:</label>
+<select id="soil">
+<option value="1">Loamy</option>
+<option value="0.9">Clay</option>
+<option value="0.8">Sandy</option>
+</select>
+
+<label>Average Rainfall (mm/year):</label>
+<input type="number" id="rain">
+
+<label>Temperature (°C):</label>
+<input type="number" id="temp">
+
+<label>Humidity (%):</label>
+<input type="number" id="humidity">
+
+<label>Fertilizer Type:</label>
+<select id="fertType">
+<option value="1.1">Organic</option>
+<option value="1.2">NPK</option>
+<option value="1.15">Urea</option>
+</select>
+
+<label>Fertilizer Quantity (kg/hectare):</label>
+<input type="number" id="fertQty">
+
+<label>Sowing Date:</label>
+<input type="date" id="date">
+
+<label>Irrigation Type:</label>
+<select id="irrigation">
+<option value="1.2">Drip</option>
+<option value="1.1">Sprinkler</option>
+<option value="1">Flood</option>
+</select>
+
+<label>Market Distance (km):</label>
+<input type="number" id="distance">
+
+<label>Seed Quality Rating (1-5):</label>
+<input type="number" id="seed" min="1" max="5">
+
+<button onclick="calculate()">Predict</button>
+
+<div class="result" id="output"></div>
+
+</div>
+
+<script>
+function calculate(){
+
+let area = area.value;
+let base = crop.value;
+let ph = ph.value;
+let soil = soil.value;
+let rain = rain.value;
+let temp = temp.value;
+let humidity = humidity.value;
+let fertType = fertType.value;
+let fertQty = fertQty.value;
+let irrigation = irrigation.value;
+let distance = distance.value;
+let seed = seed.value;
+
+let yieldPerHectare = base 
+* soil 
+* fertType 
+* irrigation 
+* (1 + (seed*0.05));
+
+if(ph < 5.5 || ph > 8){
+    yieldPerHectare *= 0.8;
+}
+
+if(rain < 400){
+    yieldPerHectare *= 0.7;
+}
+
+let totalYield = yieldPerHectare * area;
+
+let marketPrice = 20;
+let transportCost = distance * 2;
+let totalProfit = (totalYield * marketPrice) - transportCost;
+
+let successProbability = Math.min(95, (seed*15 + humidity*0.2));
+
+let sustainability = (soil*20 + irrigation*20);
+
+let risk = "";
+if(ph < 5.5) risk += "⚠ Low pH Risk<br>";
+if(rain < 400) risk += "⚠ Drought Risk<br>";
+if(fertQty > 300) risk += "⚠ Overfertilization Risk<br>";
+
+let suggestion = "Rice";
+if(rain < 500) suggestion = "Millet";
+if(ph > 7.5) suggestion = "Cotton";
+
+output.innerHTML = `
+<h3>📊 OUTPUT SECTION</h3>
+🌾 Predicted Yield per Hectare: ${yieldPerHectare.toFixed(0)} kg<br>
+💰 Estimated Total Profit: ₹ ${totalProfit.toFixed(0)}<br>
+🔄 Suggested Alternative Crop: ${suggestion}<br>
+📈 Success Probability: ${successProbability.toFixed(1)} %<br>
+🌍 Sustainability Score: ${sustainability.toFixed(0)}<br>
+🚨 Risk Alerts:<br>${risk || "No Major Risk"}
+`;
+}
+</script>
+
+</body>
+</html>
